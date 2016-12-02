@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        var posX=100;
+        var posY=100;
+        var radius=30;
+        var canvasWidth=800;
+        var canvasHeight=600;
+        var stepx=1;
+        var stepy=1;
+        
+        function DrawBoll(x,y){
+            var c=document.getElementById("myCanvas");
+            var ctx=c.getContext("2d");
+            ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+            ctx.beginPath();
+            ctx.arc(x,y,radius,0,2*Math.PI);
+            ctx.stroke();
+        }
+        
+
+        function moveBoll(){
+            var count = 0;
+            while (count<1){
+                // Reflections
+            
+                if(posX+radius >= canvasWidth || posX-radius <= 0){
+                    stepx = -stepx;
+                }
+                if(posY+radius >= canvasHeight || posY-radius <= 0){
+                    stepy = -stepy;
+                }
+                posX += stepx;
+                posY += stepy;
+           
+                DrawBoll(posX,posY);
+                
+                count++;
+            }
+        }
+    </script>
+</head>
+<body>
+<canvas id="myCanvas" width="800" height="600" style="border:1px solid #dedede;"></canvas>
+<br/>
+<button onclick="DrawBoll(100,100);">Left</button>
+<button onclick="moveBoll();">Right</button>
+</body>
+    
+</html>

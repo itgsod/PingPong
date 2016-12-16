@@ -61,56 +61,52 @@ This browser doesn't support Canvas'</canvas>
             }
         }
         
-        function drawPadelD(x){
-                
-                //ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+        function drawPaddleDown(x){
+                ctx.clearRect(0, canvasHeight-51, canvasWidth, 51);
                 ctx.beginPath();
                 ctx.rect(x,canvasHeight-50,100,20);
                 ctx.stroke();
                 post = x;
         }
-        function drawPadelU(x){
-                
-                //ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+        function drawPaddleUp(x){
+                ctx.clearRect(0, 0, canvasWidth, 51);
+        
                 ctx.beginPath();
-                ctx.rect(x,50,100,20);
+                ctx.rect(x,30,100,20);
                 ctx.stroke();
                 post = x;
         }
         
-        function movePadelRight(){
-            var i=post;
-            while (onclickDown && i<canvasWidth){
-                DrawPadel(post++);
-                
-            }
-        }
-        function movePadelLeft(){
-            var i=post;
-            while(onclickDown && i>0){
-                DrawPadel(post--);
-            }
-        }
 
     
     function onKeyDown(event){
         var ekc = event.keyCode;
         //alert(ekc);
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+     
         // Detect which key was pressed
+        //First player paddel
+        // 80 = P key, 76 = L key
         if( ekc == 80 ){
             posX += 10;
-            drawPadel(posX);
+            drawPaddleDown(posX);
             return true;
             
         }else if(ekc == 76){
             posX -= 10;
-            drawPadel(posX);
+            drawPaddleDown(posX);
      
             return true;
-        }else{
-            alert(ekc);
-            return false;
+        }else if(ekc == 81){ // Second player paddel, 81 = Q key, 65 = A key
+            posX += 10;
+            drawPaddleUp(posX);
+            return true;
+            
+        }else if(ekc == 65){
+            posX -= 10;
+            drawPaddleUp(posX);
+     
+            return true;
+
         }
    
 }
@@ -121,7 +117,8 @@ This browser doesn't support Canvas'</canvas>
     }
     
     function init(){
-        drawPadel(100);
+        drawPaddleUp(canvasWidth/2-50);
+        drawPaddleDown(canvasWidth/2-50);
         
     }
     
@@ -131,8 +128,8 @@ This browser doesn't support Canvas'</canvas>
  
     </script>
     
-<button onclick="movePadelLeft();">Left</button>
-<button onclick="movePadelRight();">Right</button>
+<button onclick="movePaddleLeft();">Left</button>
+<button onclick="movePaddleRight();">Right</button>
 </body>
     
 </html>

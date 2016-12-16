@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script>
+    <style>
+    
+    canvas {border:2px solid #000000;}
+    
+    </style>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+    <h1>Ping Pong</h1>
+    
+<canvas id="mycanvas" width="800" height="600">
+This browser doesn't support Canvas'</canvas>
+</br>
+  
+<script>
         var posX=100;
         var posY=100;
         var radius=30;
@@ -9,20 +23,25 @@
         var canvasHeight=600;
         var stepx=1;
         var stepy=1;
+        var c=document.getElementById("mycanvas");
+        var ctx=c.getContext("2d");
+        var post=canvasWidth/2;
         
-        function DrawBoll(x,y){
-            var c=document.getElementById("myCanvas");
-            var ctx=c.getContext("2d");
-            ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
-            ctx.beginPath();
-            ctx.arc(x,y,radius,0,2*Math.PI);
-            ctx.stroke();
+        
+        function drawBall(x,y){
+
+                ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+                ctx.beginPath();
+                ctx.arc(x,y,radius,0,2*Math.PI);
+                ctx.stroke();
+            
         }
         
 
-        function moveBoll(){
+        function moveBall(){
             var count = 0;
-            while (count<1){
+
+            while (count<100){
                 // Reflections
             
                 if(posX+radius >= canvasWidth || posX-radius <= 0){
@@ -33,19 +52,87 @@
                 }
                 posX += stepx;
                 posY += stepy;
-           
+             
+                
+                setInterval(function(){ DrawBoll(); }, 10);
                 DrawBoll(posX,posY);
                 
                 count++;
             }
         }
+        
+        function drawPadelD(x){
+                
+                //ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+                ctx.beginPath();
+                ctx.rect(x,canvasHeight-50,100,20);
+                ctx.stroke();
+                post = x;
+        }
+        function drawPadelU(x){
+                
+                //ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
+                ctx.beginPath();
+                ctx.rect(x,50,100,20);
+                ctx.stroke();
+                post = x;
+        }
+        
+        function movePadelRight(){
+            var i=post;
+            while (onclickDown && i<canvasWidth){
+                DrawPadel(post++);
+                
+            }
+        }
+        function movePadelLeft(){
+            var i=post;
+            while(onclickDown && i>0){
+                DrawPadel(post--);
+            }
+        }
+
+    
+    function onKeyDown(event){
+        var ekc = event.keyCode;
+        //alert(ekc);
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        // Detect which key was pressed
+        if( ekc == 80 ){
+            posX += 10;
+            drawPadel(posX);
+            return true;
+            
+        }else if(ekc == 76){
+            posX -= 10;
+            drawPadel(posX);
+     
+            return true;
+        }else{
+            alert(ekc);
+            return false;
+        }
+   
+}
+
+
+    function check(event){
+        alert(event.keyCode);
+    }
+    
+    function init(){
+        drawPadel(100);
+        
+    }
+    
+    init();
+
+    window.addEventListener('keydown',this.onKeyDown,false);
+ 
     </script>
-</head>
-<body>
-<canvas id="myCanvas" width="800" height="600" style="border:1px solid #dedede;"></canvas>
-<br/>
-<button onclick="DrawBoll(100,100);">Left</button>
-<button onclick="moveBoll();">Right</button>
+    
+<button onclick="movePadelLeft();">Left</button>
+<button onclick="movePadelRight();">Right</button>
 </body>
     
 </html>

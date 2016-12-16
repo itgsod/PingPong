@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    canvas{
+        border:2px solid #000000;
+    }
+    
+    </style>
+  
+</head>
+<body>
+<h1>Test key Event</h1>
+<canvas id="canvas" width="800" height="600"></canvas>
+<script>
+window.addEventListener('keydown',this.check,false);
+
+function check(event) {
+    var ekc = event.keyCode;
+    if( ekc == 65){
+        alert('You press the A key')
+    }else if(ekc == 32){
+        alert('Yuo press the space key')
+    }
+    alert(event.keyCode);
+}
+</script>
+
+</body>
+</html>
+
+
+

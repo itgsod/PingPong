@@ -2,115 +2,178 @@
 <html>
 <head>
     <style>
-    
-    canvas {border:2px solid #000000;}
-    
+       canvas{border:2px solid #000000;}
     </style>
     <meta charset="UTF-8"/>
 </head>
 <body>
-    <h1>Ping Pong</h1>
+<h1>Ping Pong</h1>
     
 <canvas id="mycanvas" width="800" height="600">
 This browser doesn't support Canvas'</canvas>
 </br>
   
 <script>
-        var posX=100;
-        var posY=100;
-        var radius=30;
-        var canvasWidth=800;
-        var canvasHeight=600;
-        var stepx=1;
-        var stepy=1;
-        var c=document.getElementById("mycanvas");
-        var ctx=c.getContext("2d");
-        var post=canvasWidth/2;
-        
-        
-        function drawBall(x,y){
 
-                ctx.clearRect(posX-2*radius,posY-2*radius,posX+2*radius,posY+2*radius);
-                ctx.beginPath();
-                ctx.arc(x,y,radius,0,2*Math.PI);
-                ctx.stroke();
-            
+    var radius=30;
+    var canvasWidth=800;
+    var canvasHeight=600;
+    var pos_PDX=canvasWidth/2-50;
+    var pos_PUX=canvasWidth/2-50;
+    var pos_BallX=50;
+    var pos_BallY=50;
+    var stepx=10;
+    var stepy=10;
+    var c=document.getElementById("mycanvas");
+    var ctx=c.getContext("2d");
+    var post=canvasWidth/2;
+    var intervalId;
+    var padvx=40;
+    
+    ball = {
+        x: 400,
+        y: 50,
+    
+        radius: 15,
+        color: "red",
+    
+        // Velocity components
+        vx: 0,
+        vy: 1,
+    
+        draw: function() {
+            // Here, we'll first begin drawing the path and then use the arc() function to draw the circle. The arc function accepts 6 parameters, x position, y position, radius, start angle, end angle and a boolean for anti-clockwise direction.
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.closePath();
         }
+    };
+
+    function drawBall(x,y){
+
+        //ctx.clearRect(x-radius-15,y-radius-15,4*radius,4*radius);
+        ctx.beginPath();
+        ctx.arc(x,y,radius,0,2*Math.PI);
+        ctx.stroke();
+    }
+    
+    function clearBall() {
+        //ctx.clearRect(pos_BallX-1.6*radius, pos_BallY-1.6*radius, 3*radius, 3*radius);
+        ctx.fillStyle="white";
+        ctx.beginPath();
+        ctx.arc(pos_BallX-stepx,pos_BallY-stepy,radius+2,0,2*Math.PI);
+        ctx.closePath();
+        ctx.fill();
         
+    }
 
-        function moveBall(){
-            var count = 0;
-
-            while (count<100){
-                // Reflections
-            
-                if(posX+radius >= canvasWidth || posX-radius <= 0){
-                    stepx = -stepx;
-                }
-                if(posY+radius >= canvasHeight || posY-radius <= 0){
-                    stepy = -stepy;
-                }
-                posX += stepx;
-                posY += stepy;
-             
+    function update() {
+        clearBall();
+        drawBall(pos_BallX,pos_BallY);
+        
+        var test = false;
+        if(test){
+            // Reflexion on every walls
+            if(pos_BallX+radius >= canvasWidth || pos_BallX-radius <= 0){
+                stepx = -stepx;
+            }
+        
+            if(pos_BallY+radius >= canvasHeight || pos_BallY-radius <= 0){
+                stepy = -stepy;
+            }
+        }else{
+             // Reflexion on the vertical walls only
+            if(pos_BallX+radius >= canvasWidth || pos_BallX-radius <= 0){
+                stepx = -stepx;
+            }else{
+                console.log("lost!")
                 
-                setInterval(function(){ DrawBoll(); }, 10);
-                DrawBoll(posX,posY);
-                
-                count++;
             }
         }
+            
+        //Reflexion on each paddle
         
-        function drawPaddleDown(x){
-                ctx.clearRect(0, canvasHeight-51, canvasWidth, 51);
-                ctx.beginPath();
-                ctx.rect(x,canvasHeight-50,100,20);
-                ctx.stroke();
-                post = x;
+        var testD = (pos_BallX >= pos_PDX-50 && pos_BallX <= pos_PDX+50) && (pos_BallY+radius >= canvasHeight-50);
+        var testU = (pos_BallX >= pos_PUX-50 && pos_BallX <= pos_PUX+50) && (pos_BallY-radius <= 50);
+        
+        if(testD || testU){
+                stepy = -stepy;
         }
-        function drawPaddleUp(x){
-                ctx.clearRect(0, 0, canvasWidth, 51);
-        
-                ctx.beginPath();
-                ctx.rect(x,30,100,20);
-                ctx.stroke();
-                post = x;
-        }
-        
-
+       
+        //if(pos_BallY+radius >= canvasHeight || pos_BallY-radius <= 0){
+                //stepy = -stepy;
+        //}
+        pos_BallX += stepx;
+        pos_BallY += stepy;
+    }
+    
+    setInterval(update, 3000/60);
+    
+    function clearPaddleDown(x){
+            ctx.fillStyle="white";
+            ctx.beginPath();
+            ctx.fillRect(x-padvx-2, canvasHeight-52, 100+2*padvx+4, 25);
+            ctx.closePath();
+            ctx.fill();
+    }
+ 
+    function clearPaddleUp(x){
+            ctx.fillStyle="white";
+            ctx.beginPath();
+            ctx.fillRect(x-padvx-2, 29, 100+2*padvx+4, 25);
+            ctx.closePath();
+            ctx.fill();
+    }
+ 
+    function drawPaddleDown(x){
+            clearPaddleDown(x);
+            ctx.beginPath();
+            ctx.rect(x,canvasHeight-50,100,20);
+            ctx.stroke();
+            post = x;
+    }
+    function drawPaddleUp(x){
+            //ctx.clearRect(0, 0, canvasWidth, 51);
+            clearPaddleUp(x);
+            ctx.beginPath();
+            ctx.rect(x,30,100,20);
+            ctx.stroke();
+            post = x;
+    }
     
     function onKeyDown(event){
         var ekc = event.keyCode;
         //alert(ekc);
      
         // Detect which key was pressed
-        //First player paddel
+        // First player paddel
         // 80 = P key, 76 = L key
-        if( ekc == 80 ){
-            posX += 10;
-            drawPaddleDown(posX);
+        if(ekc == 80){
+            pos_PDX += padvx;
+            drawPaddleDown(pos_PDX);
+            
             return true;
             
         }else if(ekc == 76){
-            posX -= 10;
-            drawPaddleDown(posX);
+            pos_PDX -= padvx;
+            drawPaddleDown(pos_PDX);
      
             return true;
         }else if(ekc == 81){ // Second player paddel, 81 = Q key, 65 = A key
-            posX += 10;
-            drawPaddleUp(posX);
+            pos_PUX += 10;
+            drawPaddleUp(pos_PUX);
+            
             return true;
             
         }else if(ekc == 65){
-            posX -= 10;
-            drawPaddleUp(posX);
+            pos_PUX -= 10;
+            drawPaddleUp(pos_PUX);
      
             return true;
-
         }
-   
-}
-
+    }
 
     function check(event){
         alert(event.keyCode);
@@ -119,17 +182,17 @@ This browser doesn't support Canvas'</canvas>
     function init(){
         drawPaddleUp(canvasWidth/2-50);
         drawPaddleDown(canvasWidth/2-50);
-        
+        moveBall();
+        //setInterval(moveBall,150);
     }
     
-    init();
-
     window.addEventListener('keydown',this.onKeyDown,false);
- 
+
+    init();
+    
     </script>
-    
-<button onclick="movePaddleLeft();">Left</button>
-<button onclick="movePaddleRight();">Right</button>
+
+    <button onclick="movePaddleLeft();">Left</button>
+    <button onclick="movePaddleRight();">Right</button>
 </body>
-    
 </html>

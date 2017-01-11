@@ -2,21 +2,21 @@
 <html>
 <head>
     <style>
-       canvas{border:2px solid #000000;}
+       canvas{border:2px solid #000000; background-color: "blue";}
     </style>
     <meta charset="UTF-8"/>
 </head>
 <body>
-<h1>Ping Pong</h1>
+<h1>Ping Pong Spel</h1>
     
-<canvas id="mycanvas" width="800" height="600">
+<canvas id="mycanvas" width="400" height="600">
 This browser doesn't support Canvas'</canvas>
 </br>
   
 <script>
 
-    var radius=30;
-    var canvasWidth=800;
+    var radius=20;
+    var canvasWidth=400;
     var canvasHeight=600;
     var pos_PDX=canvasWidth/2-50;
     var pos_PUX=canvasWidth/2-50;
@@ -54,8 +54,10 @@ This browser doesn't support Canvas'</canvas>
     function drawBall(x,y){
 
         //ctx.clearRect(x-radius-15,y-radius-15,4*radius,4*radius);
+        ctx.fillStyle="red";
         ctx.beginPath();
         ctx.arc(x,y,radius,0,2*Math.PI);
+        ctx.fill();
         ctx.stroke();
     }
     
@@ -95,16 +97,14 @@ This browser doesn't support Canvas'</canvas>
             
         //Reflexion on each paddle
         
-        var testD = (pos_BallX >= pos_PDX-50 && pos_BallX <= pos_PDX+50) && (pos_BallY+radius >= canvasHeight-50);
-        var testU = (pos_BallX >= pos_PUX-50 && pos_BallX <= pos_PUX+50) && (pos_BallY-radius <= 50);
+        var testDown = (pos_BallX >= pos_PDX-50 && pos_BallX <= pos_PDX+50) && (pos_BallY+radius >= canvasHeight-50);
+        var testUp = (pos_BallX >= pos_PUX-50 && pos_BallX <= pos_PUX+50) && (pos_BallY-radius <= 50);
+        var testWall = (pos_BallY+radius >= canvasHeight || pos_BallY-radius <= 0);
         
-        if(testD || testU){
+        if(testDown || testUp || testWall){
                 stepy = -stepy;
         }
-       
-        //if(pos_BallY+radius >= canvasHeight || pos_BallY-radius <= 0){
-                //stepy = -stepy;
-        //}
+        
         pos_BallX += stepx;
         pos_BallY += stepy;
     }
@@ -194,5 +194,6 @@ This browser doesn't support Canvas'</canvas>
 
     <button onclick="movePaddleLeft();">Left</button>
     <button onclick="movePaddleRight();">Right</button>
+    
 </body>
 </html>
